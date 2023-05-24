@@ -11,8 +11,9 @@ export default {
       colors: {
         orange: "#e65b2e",
         darkBlack: "#212121",
-        darkBlack2: "#333",
-        white: "#fff",
+        darkGray: "#29292e",
+        almostWhite: "#f2f2f2",
+        white: "#ffffff",
       },
     },
   },
