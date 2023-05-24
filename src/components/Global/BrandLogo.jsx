@@ -10,7 +10,7 @@ const BrandLogo = () => {
           color="white"
           size={36}
         />
-        <h1 className="font-rubik text-4xl">GitPop</h1>
+        <h1 className="font-rubik text-darkBlack text-4xl">GitPop</h1>
       </div>
     </>
   );

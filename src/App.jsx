@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
+import BrandLogo from "./components/Global/BrandLogo";
 
 const App = () => {
-    return (
-        <>
-            <h1 className='text-3xl font-bold underline'>Hello world!</h1>
-        </>
-    );
+  return (
+    <>
+      <BrandLogo />
+    </>
+  );
 };
 
 export default App;
