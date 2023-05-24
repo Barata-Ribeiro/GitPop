@@ -6,8 +6,8 @@
 
 @layer base {
   body {
-    @apply bg-white;
+    @apply bg-shark-50;
     @apply font-sans;
-    @apply text-darkGray;
+    @apply text-shark-950;
   }
 }
