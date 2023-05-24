@@ -2,8 +2,8 @@ import React from "react";
 
 const InputBar = () => {
   return (
-    <div>
-      <form className="md:flex flex-row justify-center items-center">
+    <div className="w-full px-4 sm:px-6 lg:px-8">
+      <form className="flex flex-row justify-center items-center max-sm:flex-col">
         <input
           type="text"
           className="form-control block max-w-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 text-xl font-normal text-shark-950 bg-white bg-clip-padding border border-solid border-shark-200 rounded transition ease-in-out m-0 focus:text-shark-950 focus:bg-white focus:border-cinnabar-600 focus:outline-none"
