@@ -8,38 +8,72 @@ import Footer from "./components/Footer/Footer";
 
 const App = () => {
   const { data, request, loading, error } = useFetch();
-  let username;
+  const [username, setUsername] = React.useState("");
+  const [fetchData, setFetchData] = React.useState(false);
+  const [userData, setUserData] = React.useState(null);
+  const [reposData, setReposData] = React.useState(null);
+  const [commitsData, setCommitsData] = React.useState(null);
 
   React.useEffect(() => {
-    async function fetchData() {
-      const { response1, json1 } = await request(
-        `https://api.github.com/users/${username}`
-      );
-      const { response2, json2 } = await request(
-        `https://api.github.com/users/${username}/repos`
-      );
-      const { response3, json3 } = await request(
-        `https://api.github.com/search/commits?q=author:${username}`
-      );
+    async function fetchUserData() {
+      if (fetchData) {
+        try {
+          const { response: responseUser, json: jsonUser } = await request(
+            `https://api.github.com/users/${username}`
+          );
+
+          const { response: responseRepos, json: jsonRepos } = await request(
+            `https://api.github.com/users/${username}/repos`
+          );
+
+          const { response: responseCommits, json: jsonCommits } =
+            await request(
+              `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=1`
+            );
+
+          setUserData(jsonUser);
+          setReposData(jsonRepos);
+          setCommitsData(jsonCommits);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
     }
-    fetchData();
-  }, [request, username]);
+    fetchUserData();
+  }, [fetchData, request, username]);
+
+  const handleInputSubmit = (inputValue) => {
+    setUsername(inputValue);
+    setFetchData(true);
+  };
 
   if (error) return <p>Erro: {error}</p>;
   if (loading) return <p>Carregando...</p>;
-  if (data)
-    return (
-      <>
-        <BrandLogo />
-        <main className="h-full">
-          <InputBar />
-          <ProfileCard />
-          <ProfileNumbers />
-        </main>
-        <Footer />
-      </>
-    );
-  else return null;
+  return (
+    <>
+      <BrandLogo />
+      <main className="h-full">
+        <InputBar onSubmit={handleInputSubmit} />
+        {userData && reposData && commitsData && (
+          <>
+            <ProfileCard
+              gitImgSrc={userData.avatar_url}
+              gitName={userData.name}
+              gitBio={userData.bio}
+              gitForHire={userData.hireable}
+            />
+            <ProfileNumbers
+              gitFollowers={userData.followers}
+              gitFollowing={userData.following}
+              gitRepos={reposData.length}
+              gitCommits={commitsData.total_count}
+            />
+          </>
+        )}
+      </main>
+      <Footer />
+    </>
+  );
 };
 
 export default App;
