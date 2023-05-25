@@ -2,6 +2,7 @@ import React from "react";
 import useFetch from "./components/Global/useFetch";
 import useSessionStorage from "./components/Global/useSessionStorage";
 import BrandLogo from "./components/Global/BrandLogo";
+import LoadingAnim from "./components/Global/LoadingAnim";
 import InputBar from "./components/Global/InputBar";
 import ProfileCard from "./components/Profile/ProfileCard";
 import ProfileNumbers from "./components/Profile/ProfileNumbers";
@@ -53,27 +54,33 @@ const App = () => {
   };
 
   if (error) return <p>Erro: {error}</p>;
-  if (loading) return <p>Carregando...</p>;
+
   return (
     <>
       <BrandLogo />
       <main className="h-full">
         <InputBar onSubmit={handleInputSubmit} />
-        {userData && reposData && commitsData && (
-          <>
-            <ProfileCard
-              gitImgSrc={userData.avatar_url}
-              gitName={userData.name}
-              gitBio={userData.bio}
-              gitForHire={userData.hireable}
-            />
-            <ProfileNumbers
-              gitFollowers={userData.followers}
-              gitFollowing={userData.following}
-              gitRepos={reposData.length}
-              gitCommits={commitsData.total_count}
-            />
-          </>
+        {loading ? (
+          <LoadingAnim />
+        ) : (
+          userData &&
+          reposData &&
+          commitsData && (
+            <>
+              <ProfileCard
+                gitImgSrc={userData.avatar_url}
+                gitName={userData.name}
+                gitBio={userData.bio}
+                gitForHire={userData.hireable}
+              />
+              <ProfileNumbers
+                gitFollowers={userData.followers}
+                gitFollowing={userData.following}
+                gitRepos={reposData.length}
+                gitCommits={commitsData.total_count}
+              />
+            </>
+          )
         )}
       </main>
       <Footer />
