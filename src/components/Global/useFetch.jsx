@@ -14,7 +14,14 @@ const useFetch = () => {
         ...options,
         signal: abortController.signal,
       });
-      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      if (!response.ok) {
+        const json = await response.json();
+        throw {
+          message: json.message,
+          status: response.status,
+          documentation_url: json.documentation_url,
+        };
+      }
       const json = await response.json();
       setData(json);
       return { response, json };
@@ -22,7 +29,7 @@ const useFetch = () => {
       if (error.name === "AbortError") {
         console.log("Fetch cancelled");
       } else {
-        setError(error.message);
+        setError(error);
         return { error };
       }
     } finally {
