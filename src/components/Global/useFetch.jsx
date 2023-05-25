@@ -29,8 +29,7 @@ const useFetch = () => {
       setLoading(false);
     }
 
-    // Cleanup function to abort fetch on component unmount
-    return function cleanup() {
+    return () => {
       abortController.abort();
     };
   }, []);
