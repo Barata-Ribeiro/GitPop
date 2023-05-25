@@ -3,9 +3,11 @@ import useFetch from "./components/Global/useFetch";
 import useSessionStorage from "./components/Global/useSessionStorage";
 import BrandLogo from "./components/Global/BrandLogo";
 import LoadingAnim from "./components/Global/LoadingAnim";
+import ErrorPage from "./components/Global/ErrorPage";
 import InputBar from "./components/Global/InputBar";
 import ProfileCard from "./components/Profile/ProfileCard";
 import ProfileNumbers from "./components/Profile/ProfileNumbers";
+import RepoCard from "./components/Profile/RepoCard";
 import Footer from "./components/Footer/Footer";
 
 const App = () => {
@@ -53,7 +55,7 @@ const App = () => {
     setUsername(inputValue);
   };
 
-  if (error) return <p>Erro: {error}</p>;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <>
@@ -72,6 +74,8 @@ const App = () => {
                 gitName={userData.name}
                 gitBio={userData.bio}
                 gitForHire={userData.hireable}
+                gitLocation={userData.location}
+                gitMemberSince={userData.created_at}
               />
               <ProfileNumbers
                 gitFollowers={userData.followers}
@@ -79,6 +83,12 @@ const App = () => {
                 gitRepos={reposData.length}
                 gitCommits={commitsData.total_count}
               />
+              <div className="flex flex-wrap justify-center items-center gap-6">
+                <RepoCard />
+                <RepoCard />
+                <RepoCard />
+                <RepoCard />
+              </div>
             </>
           )
         )}
