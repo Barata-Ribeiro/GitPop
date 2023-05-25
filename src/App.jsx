@@ -1,5 +1,6 @@
 import React from "react";
 import useFetch from "./components/Global/useFetch";
+import useSessionStorage from "./components/Global/useSessionStorage";
 import BrandLogo from "./components/Global/BrandLogo";
 import InputBar from "./components/Global/InputBar";
 import ProfileCard from "./components/Profile/ProfileCard";
@@ -8,15 +9,19 @@ import Footer from "./components/Footer/Footer";
 
 const App = () => {
   const { data, request, loading, error } = useFetch();
-  const [username, setUsername] = React.useState("");
-  const [fetchData, setFetchData] = React.useState(false);
+  // These are the global state variables for the API
   const [userData, setUserData] = React.useState(null);
   const [reposData, setReposData] = React.useState(null);
   const [commitsData, setCommitsData] = React.useState(null);
 
+  // Use the username from session storage if it exists, or use an empty string as default
+  const [username, setUsername] = useSessionStorage("username", "");
+
+  // Call fetchUserData whenever username changes
   React.useEffect(() => {
     async function fetchUserData() {
-      if (fetchData) {
+      // Only attempt to fetch data if a username is set
+      if (username) {
         try {
           const { response: responseUser, json: jsonUser } = await request(
             `https://api.github.com/users/${username}`
@@ -40,11 +45,11 @@ const App = () => {
       }
     }
     fetchUserData();
-  }, [fetchData, request, username]);
+  }, [request, username]);
 
+  // Function to handle input submission, sets the username and updates session storage
   const handleInputSubmit = (inputValue) => {
     setUsername(inputValue);
-    setFetchData(true);
   };
 
   if (error) return <p>Erro: {error}</p>;
