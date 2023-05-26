@@ -1,12 +1,13 @@
 import React from "react";
 import useFetch from "./components/Global/Hooks/useFetch";
 import useSessionStorage from "./components/Global/Hooks/useSessionStorage";
-import BrandLogo from "./components/Global/BrandLogo";
 import LoadingAnim from "./components/Global/LoadingAnim";
 import ErrorPage from "./components/Global/ErrorPage";
+import Header from "./components/Header/Header";
 import InputBar from "./components/Global/InputBar";
 import ProfileCard from "./components/Profile/ProfileCard";
 import ProfileNumbers from "./components/Profile/ProfileNumbers";
+import NoRepos from "./components/Profile/NoRepo";
 import RepoCard from "./components/Profile/RepoCard";
 import Footer from "./components/Footer/Footer";
 
@@ -59,7 +60,7 @@ const App = () => {
 
   // Iterates through the reposData array and sorts them by created date
   // if null, creates an empty array to avoid 'reposData is not iterable'
-  const sortedRepos = [...(reposData || [])].sort((a, b) => {
+  const reposByDate = [...(reposData || [])].sort((a, b) => {
     const dateA = new Date(a.created_at);
     const dateB = new Date(b.created_at);
     return dateB - dateA;
@@ -67,7 +68,7 @@ const App = () => {
 
   return (
     <>
-      <BrandLogo />
+      <Header />
       <main className="h-full">
         <InputBar onSubmit={handleInputSubmit} />
 
@@ -96,51 +97,37 @@ const App = () => {
 
               {/* REPOSITORIES */}
               {reposData.length === 0 ? (
-                <div className="flex flex-col justify-center items-center">
-                  <p className="mx-auto mt-3 font-semibold text-shark-950">
-                    No repository found.
-                  </p>
-                  <p className="mt-4 text-shark-500">
-                    Check{" "}
-                    <a
-                      className="text-shark-950 hover:text-cinnabar-500 hover:underline"
-                      rel="noreferrer noopener"
-                      target="_blank"
-                      href={userData.html_url}
-                    >
-                      profile
-                    </a>{" "}
-                    for more information.
-                  </p>
-                </div>
+                <NoRepos userData={userData} />
               ) : (
                 <div className="flex flex-wrap justify-center items-center gap-6">
-                  {sortedRepos.map((repo) => (
+                  {reposByDate.map((repo) => (
                     <ul>
                       <li key={repo.id}>
-                        <RepoCard
-                          gitRepoAuthor={repo.owner.login}
-                          gitRepoAvatar={repo.owner.avatar_url}
-                          gitRepoTitle={repo.name}
-                          gitRepoDesc={repo.description}
-                          gitRepoDate={new Date(
-                            repo.created_at
-                          ).toLocaleDateString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                          gitRepoUpdate={new Date(
-                            repo.updated_at
-                          ).toLocaleDateString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                          gitRepoLicense={
-                            repo.license ? repo.license.name : "No license"
-                          }
-                        />
+                        <a href="">
+                          <RepoCard
+                            gitRepoAuthor={repo.owner.login}
+                            gitRepoAvatar={repo.owner.avatar_url}
+                            gitRepoTitle={repo.name}
+                            gitRepoDesc={repo.description}
+                            gitRepoDate={new Date(
+                              repo.created_at
+                            ).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                            gitRepoUpdate={new Date(
+                              repo.updated_at
+                            ).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                            gitRepoLicense={
+                              repo.license ? repo.license.name : "No license"
+                            }
+                          />
+                        </a>
                       </li>
                     </ul>
                   ))}
