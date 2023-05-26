@@ -26,22 +26,22 @@ const App = () => {
       // Only attempt to fetch data if a username is set
       if (username) {
         try {
-          const { response: responseUser, json: jsonUser } = await request(
-            `https://api.github.com/users/${username}`
+          const urls = [
+            `https://api.github.com/users/${username}`,
+            `https://api.github.com/users/${username}/repos`,
+            `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=1`,
+          ];
+          const allData = await Promise.all(
+            urls.map((url) =>
+              request(url).catch((error) =>
+                console.error(`Error in ${url}: `, error)
+              )
+            )
           );
 
-          const { response: responseRepos, json: jsonRepos } = await request(
-            `https://api.github.com/users/${username}/repos`
-          );
-
-          const { response: responseCommits, json: jsonCommits } =
-            await request(
-              `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=1`
-            );
-
-          setUserData(jsonUser);
-          setReposData(jsonRepos);
-          setCommitsData(jsonCommits);
+          setUserData(allData[0]?.json);
+          setReposData(allData[1]?.json);
+          setCommitsData(allData[2]?.json);
         } catch (error) {
           console.error("Error:", error);
         }
@@ -57,11 +57,21 @@ const App = () => {
 
   if (error) return <ErrorPage error={error} />;
 
+  // Iterates through the reposData array and sorts them by created date
+  // if null, creates an empty array to avoid 'reposData is not iterable'
+  const sortedRepos = [...(reposData || [])].sort((a, b) => {
+    const dateA = new Date(a.created_at);
+    const dateB = new Date(b.created_at);
+    return dateB - dateA;
+  });
+
   return (
     <>
       <BrandLogo />
       <main className="h-full">
         <InputBar onSubmit={handleInputSubmit} />
+
+        {/* PROFILE */}
         {loading ? (
           <LoadingAnim />
         ) : (
@@ -83,12 +93,59 @@ const App = () => {
                 gitRepos={reposData.length}
                 gitCommits={commitsData.total_count}
               />
-              <div className="flex flex-wrap justify-center items-center gap-6">
-                <RepoCard />
-                <RepoCard />
-                <RepoCard />
-                <RepoCard />
-              </div>
+
+              {/* REPOSITORIES */}
+              {reposData.length === 0 ? (
+                <div className="flex flex-col justify-center items-center">
+                  <p className="mx-auto mt-3 font-semibold text-shark-950">
+                    No repository found.
+                  </p>
+                  <p className="mt-4 text-shark-500">
+                    Check{" "}
+                    <a
+                      className="text-shark-950 hover:text-cinnabar-500 hover:underline"
+                      rel="noreferrer noopener"
+                      target="_blank"
+                      href={userData.html_url}
+                    >
+                      profile
+                    </a>{" "}
+                    for more information.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-wrap justify-center items-center gap-6">
+                  {sortedRepos.map((repo) => (
+                    <ul>
+                      <li key={repo.id}>
+                        <RepoCard
+                          gitRepoAuthor={repo.owner.login}
+                          gitRepoAvatar={repo.owner.avatar_url}
+                          gitRepoTitle={repo.name}
+                          gitRepoDesc={repo.description}
+                          gitRepoDate={new Date(
+                            repo.created_at
+                          ).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                          gitRepoUpdate={new Date(
+                            repo.updated_at
+                          ).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                          gitRepoLicense={
+                            repo.license ? repo.license.name : "No license"
+                          }
+                        />
+                      </li>
+                    </ul>
+                  ))}
+                </div>
+              )}
             </>
           )
         )}
