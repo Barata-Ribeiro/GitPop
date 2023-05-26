@@ -11,6 +11,8 @@ import NoRepos from "./components/Profile/NoRepo";
 import RepoCard from "./components/Profile/RepoCard";
 import Footer from "./components/Footer/Footer";
 
+const BASE_URL = "https://api.github.com/users";
+
 const App = () => {
   const { data, request, loading, error } = useFetch();
   // These are the global state variables for the API
@@ -28,11 +30,11 @@ const App = () => {
       if (username) {
         try {
           const urls = [
-            `https://api.github.com/users/${username}`,
-            `https://api.github.com/users/${username}/repos`,
+            `${BASE_URL}/${username}`,
+            `${BASE_URL}/${username}/repos`,
             `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=1`,
           ];
-          const allData = await Promise.all(
+          const allData = await Promise.all(  
             urls.map((url) =>
               request(url).catch((error) =>
                 console.error(`Error in ${url}: `, error)
@@ -99,39 +101,37 @@ const App = () => {
               {reposData.length === 0 ? (
                 <NoRepos userData={userData} />
               ) : (
-                <div className="flex flex-wrap justify-center items-center gap-6">
+                <ul className="flex flex-wrap justify-center items-center gap-6">
                   {reposByDate.map((repo) => (
-                    <ul>
-                      <li key={repo.id}>
-                        <a href="">
-                          <RepoCard
-                            gitRepoAuthor={repo.owner.login}
-                            gitRepoAvatar={repo.owner.avatar_url}
-                            gitRepoTitle={repo.name}
-                            gitRepoDesc={repo.description}
-                            gitRepoDate={new Date(
-                              repo.created_at
-                            ).toLocaleDateString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                            gitRepoUpdate={new Date(
-                              repo.updated_at
-                            ).toLocaleDateString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                            gitRepoLicense={
-                              repo.license ? repo.license.name : "No license"
-                            }
-                          />
-                        </a>
-                      </li>
-                    </ul>
+                    <li key={repo.id}>
+                      <a href="">
+                        <RepoCard
+                          gitRepoAuthor={repo.owner.login}
+                          gitRepoAvatar={repo.owner.avatar_url}
+                          gitRepoTitle={repo.name}
+                          gitRepoDesc={repo.description}
+                          gitRepoDate={new Date(
+                            repo.created_at
+                          ).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                          gitRepoUpdate={new Date(
+                            repo.updated_at
+                          ).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                          gitRepoLicense={
+                            repo.license ? repo.license.name : "No license"
+                          }
+                        />
+                      </a>
+                    </li>
                   ))}
-                </div>
+                </ul>
               )}
             </>
           )
