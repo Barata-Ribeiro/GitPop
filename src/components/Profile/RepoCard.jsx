@@ -1,9 +1,10 @@
 import React from "react";
+import { GoStar } from "react-icons/go";
 
 const RepoCard = ({
   gitRepoTitle,
   gitRepoAuthor,
-  gitRepoAvatar,
+  gitRepoStars,
   gitRepoDesc,
   gitRepoDate,
   gitRepoUpdate,
@@ -28,12 +29,9 @@ const RepoCard = ({
             </p>
           </div>
 
-          <div className="hidden sm:block sm:shrink-0">
-            <img
-              alt="Avatar"
-              src={gitRepoAvatar}
-              className="h-16 w-16 rounded-full object-cover shadow-lg"
-            />
+          <div className="flex items-center gap-2">
+            <GoStar size={15} />
+            <p>{gitRepoStars}</p>
           </div>
         </div>
 

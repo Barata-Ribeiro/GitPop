@@ -9,6 +9,7 @@ import ProfileCard from "./components/Profile/ProfileCard";
 import ProfileNumbers from "./components/Profile/ProfileNumbers";
 import NoRepos from "./components/Profile/NoRepo";
 import RepoCard from "./components/Profile/RepoCard";
+import { GoArrowDown } from "react-icons/go";
 import Footer from "./components/Footer/Footer";
 
 const BASE_URL = "https://api.github.com/users";
@@ -22,6 +23,9 @@ const App = () => {
 
   // Use the username from session storage if it exists, or use an empty string as default
   const [username, setUsername] = useSessionStorage("username", "");
+
+  // Add new state to control number of repos to show
+  const [reposToShow, setReposToShow] = React.useState(4);
 
   // Call fetchUserData whenever username changes
   React.useEffect(() => {
@@ -56,6 +60,11 @@ const App = () => {
   // Function to handle input submission, sets the username and updates session storage
   const handleInputSubmit = (inputValue) => {
     setUsername(inputValue);
+  };
+
+  // Function to handle loading more repos
+  const showMoreRepos = () => {
+    setReposToShow(reposToShow + 4);
   };
 
   if (error) return <ErrorPage error={error} />;
@@ -101,37 +110,49 @@ const App = () => {
               {reposData.length === 0 ? (
                 <NoRepos userData={userData} />
               ) : (
-                <ul className="flex flex-wrap justify-center items-center gap-6">
-                  {reposByDate.map((repo) => (
-                    <li key={repo.id}>
-                      <a href="">
-                        <RepoCard
-                          gitRepoAuthor={repo.owner.login}
-                          gitRepoAvatar={repo.owner.avatar_url}
-                          gitRepoTitle={repo.name}
-                          gitRepoDesc={repo.description}
-                          gitRepoDate={new Date(
-                            repo.created_at
-                          ).toLocaleDateString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                          gitRepoUpdate={new Date(
-                            repo.updated_at
-                          ).toLocaleDateString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                          gitRepoLicense={
-                            repo.license ? repo.license.name : "No license"
-                          }
-                        />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <ul className="flex flex-wrap justify-center items-center gap-6">
+                    {reposByDate.slice(0, reposToShow).map((repo) => (
+                      <li key={repo.id}>
+                        <a href="">
+                          <RepoCard
+                            gitRepoAuthor={repo.owner.login}
+                            gitRepoStars={repo.stargazers_count}
+                            gitRepoTitle={repo.name}
+                            gitRepoDesc={repo.description}
+                            gitRepoDate={new Date(
+                              repo.created_at
+                            ).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                            gitRepoUpdate={new Date(
+                              repo.updated_at
+                            ).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                            gitRepoLicense={
+                              repo.license ? repo.license.name : "No license"
+                            }
+                          />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  {reposToShow < reposByDate.length && (
+                    <div className="flex justify-center items-center mt-8">
+                      <button
+                        className="flex justify-center items-center gap-2 px-7 py-3 bg-gradient-to-r from-cinnabar-400 to-cinnabar-600 text-shark-50 font-semibold text-sm leading-snug uppercase rounded shadow-md hover:bg-gradient-to-r hover:from-cinnabar-500 hover:to-cinnabar-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gradient-to-r active:from-cinnabar-600 active:to-cinnabar-800 active:shadow-lg disabled:bg-gradient-to-r disabled:from-cinnabar-100 disabled:to-cinnabar-300 disabled:text-cinnabar-700 transition duration-150 ease-in-out"
+                        onClick={showMoreRepos}
+                      >
+                        Load More <GoArrowDown />
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
             </>
           )
