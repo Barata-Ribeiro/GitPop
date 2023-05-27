@@ -6,7 +6,7 @@ GitPop is a web application designed for those who want to explore GitHub user's
 
 ## 👨‍💻 Demo
 
-[Click here](https://github.com/Barata-Ribeiro/GitPop.git) to see a live demo of the website.
+[Click here](https://Barata-Ribeiro.github.io/GitPop) to see a live demo of the website.
 
 _screenshot soon_
 
