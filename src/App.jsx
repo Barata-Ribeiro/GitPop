@@ -34,7 +34,7 @@ const App = () => {
             `${BASE_URL}/${username}/repos`,
             `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=1`,
           ];
-          const allData = await Promise.all(  
+          const allData = await Promise.all(
             urls.map((url) =>
               request(url).catch((error) =>
                 console.error(`Error in ${url}: `, error)
