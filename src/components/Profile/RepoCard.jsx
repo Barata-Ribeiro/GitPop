@@ -2,6 +2,7 @@ import React from "react";
 import { GoStar } from "react-icons/go";
 
 const RepoCard = ({
+  gitRepoLink,
   gitRepoTitle,
   gitRepoAuthor,
   gitRepoStars,
@@ -13,7 +14,10 @@ const RepoCard = ({
   return (
     <div>
       <a
-        href="#"
+        href={gitRepoLink}
+        target="_blank"
+        rel="noreferrer noopener"
+        title={gitRepoTitle}
         className="relative block overflow-hidden rounded-lg border border-shark-100 p-4 sm:p-6 lg:p-8"
       >
         <span className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-cinnabar-100 via-cinnabar-500 to-cinnabar-900"></span>
