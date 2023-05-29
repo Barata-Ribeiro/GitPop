@@ -13,6 +13,7 @@ import { GoArrowDown } from "react-icons/go";
 import Footer from "./components/Footer/Footer";
 
 const BASE_URL = "https://api.github.com/users";
+const DEFAULT_REPOS_TO_SHOW = 4;
 
 const App = () => {
   const { data, request, loading, error } = useFetch();
@@ -59,12 +60,13 @@ const App = () => {
 
   // Function to handle input submission, sets the username and updates session storage
   const handleInputSubmit = (inputValue) => {
-    setUsername(inputValue);
+    // Check if the username has changed before setting
+    if (inputValue !== username) setUsername(inputValue);
   };
 
   // Function to handle loading more repos
   const showMoreRepos = () => {
-    setReposToShow(reposToShow + 4);
+    setReposToShow(reposToShow + DEFAULT_REPOS_TO_SHOW);
   };
 
   if (error) return <ErrorPage error={error} />;
