@@ -5,13 +5,7 @@ const InputBar = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Function passed as a prop to the inputBar with the inputText as argument
     onSubmit(inputText);
-  };
-
-  const handleChange = (e) => {
-    // Set the inputText to the value of the input element
-    setInputText(e.target.value);
   };
 
   return (
@@ -26,7 +20,8 @@ const InputBar = ({ onSubmit }) => {
           className="form-control block max-w-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 text-xl font-normal text-shark-950 bg-white bg-clip-padding border border-solid border-shark-200 rounded transition ease-in-out m-0 focus:text-shark-950 focus:bg-white focus:border-cinnabar-600 focus:outline-none"
           placeholder="GitHub Username"
           value={inputText}
-          onChange={handleChange}
+          onChange={({ target }) => setInputText(target.value)}
+          required
         />
         <button
           type="submit"
