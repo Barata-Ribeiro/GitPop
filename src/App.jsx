@@ -8,6 +8,7 @@ import InputBar from "./components/Global/InputBar";
 import ProfileCard from "./components/Profile/ProfileCard";
 import ProfileNumbers from "./components/Profile/ProfileNumbers";
 import NoRepos from "./components/Profile/NoRepo";
+import RadioFilter from "./components/Global/RadioFilter";
 import RepoCard from "./components/Profile/RepoCard";
 import { GoArrowDown } from "react-icons/go";
 import Footer from "./components/Footer/Footer";
@@ -21,6 +22,7 @@ const App = () => {
   const [userData, setUserData] = React.useState(null);
   const [reposData, setReposData] = React.useState(null);
   const [commitsData, setCommitsData] = React.useState(null);
+  const [filter, setFilter] = React.useState("stars");
 
   // Use the username from session storage if it exists, or use an empty string as default
   const [username, setUsername] = useSessionStorage("username", "");
@@ -71,18 +73,38 @@ const App = () => {
 
   if (error) return <ErrorPage error={error} />;
 
-  // Iterates through the reposData array and sorts them by created date
-  // if null, creates an empty array to avoid 'reposData is not iterable'
-  const reposByDate = [...(reposData || [])].sort((a, b) => {
-    const dateA = new Date(a.created_at);
-    const dateB = new Date(b.created_at);
-    return dateB - dateA;
-  });
+  // let's filter the repos based on the filter selected! =D
+  const filteredRepos = React.useMemo(() => {
+    if (reposData) {
+      switch (filter) {
+        case "last created":
+          return [...reposData].sort((a, b) => {
+            const dateA = new Date(a.created_at);
+            const dateB = new Date(b.created_at);
+            return dateB - dateA;
+          });
+        case "last updated":
+          return [...reposData].sort((a, b) => {
+            const dateA = new Date(a.updated_at);
+            const dateB = new Date(b.updated_at);
+            return dateB - dateA;
+          });
+        case "stars":
+          return [...reposData].sort(
+            (a, b) => b.stargazers_count - a.stargazers_count
+          );
+        default:
+          return reposData;
+      }
+    } else {
+      return [];
+    }
+  }, [reposData, filter]);
 
   return (
     <>
       <Header />
-      <main className="h-full">
+      <main className="h-full flex flex-col justify-center items-center">
         <InputBar onSubmit={handleInputSubmit} />
 
         {/* PROFILE */}
@@ -113,46 +135,50 @@ const App = () => {
                 <NoRepos userData={userData} />
               ) : (
                 <>
+                  {/* FILTER */}
+                  <RadioFilter
+                    options={["last created", "last updated", "stars"]}
+                    value={filter}
+                    setValue={setFilter}
+                  />
+                  {/* REPO CARDS */}
                   <ul className="flex flex-wrap justify-center items-center gap-6">
-                    {reposByDate.slice(0, reposToShow).map((repo) => (
+                    {filteredRepos.slice(0, reposToShow).map((repo) => (
                       <li key={repo.id}>
-                        <a href="">
-                          <RepoCard
-                            gitRepoAuthor={repo.owner.login}
-                            gitRepoStars={repo.stargazers_count}
-                            gitRepoTitle={repo.name}
-                            gitRepoDesc={repo.description}
-                            gitRepoDate={new Date(
-                              repo.created_at
-                            ).toLocaleDateString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                            gitRepoUpdate={new Date(
-                              repo.updated_at
-                            ).toLocaleDateString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                            gitRepoLicense={
-                              repo.license ? repo.license.name : "No license"
-                            }
-                          />
-                        </a>
+                        <RepoCard
+                          gitRepoLink={repo.html_url}
+                          gitRepoAuthor={repo.owner.login}
+                          gitRepoStars={repo.stargazers_count}
+                          gitRepoTitle={repo.name}
+                          gitRepoDesc={repo.description}
+                          gitRepoDate={new Date(
+                            repo.created_at
+                          ).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                          gitRepoUpdate={new Date(
+                            repo.updated_at
+                          ).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                          gitRepoLicense={
+                            repo.license ? repo.license.name : "No license"
+                          }
+                        />
                       </li>
                     ))}
                   </ul>
-                  {reposToShow < reposByDate.length && (
-                    <div className="flex justify-center items-center mt-8">
-                      <button
-                        className="flex justify-center items-center gap-2 px-7 py-3 bg-gradient-to-r from-cinnabar-400 to-cinnabar-600 text-shark-50 font-semibold text-sm leading-snug uppercase rounded shadow-md hover:bg-gradient-to-r hover:from-cinnabar-500 hover:to-cinnabar-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gradient-to-r active:from-cinnabar-600 active:to-cinnabar-800 active:shadow-lg disabled:bg-gradient-to-r disabled:from-cinnabar-100 disabled:to-cinnabar-300 disabled:text-cinnabar-700 transition duration-150 ease-in-out"
-                        onClick={showMoreRepos}
-                      >
-                        Load More <GoArrowDown />
-                      </button>
-                    </div>
+                  {reposToShow < filteredRepos.length && (
+                    <button
+                      className="flex justify-center items-center mt-8 gap-2 px-7 py-3 bg-gradient-to-r from-cinnabar-400 to-cinnabar-600 text-shark-50 font-semibold text-sm leading-snug uppercase rounded shadow-md hover:bg-gradient-to-r hover:from-cinnabar-500 hover:to-cinnabar-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gradient-to-r active:from-cinnabar-600 active:to-cinnabar-800 active:shadow-lg disabled:bg-gradient-to-r disabled:from-cinnabar-100 disabled:to-cinnabar-300 disabled:text-cinnabar-700 transition duration-150 ease-in-out"
+                      onClick={showMoreRepos}
+                    >
+                      Load More <GoArrowDown />
+                    </button>
                   )}
                 </>
               )}
