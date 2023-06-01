@@ -22,7 +22,13 @@ const Footer = () => {
             Site Terms
           </span>
           <div className="h-4 w-px bg-shark-500/20"></div>
-          <a href="https://github.com/Barata-Ribeiro/GitPop">Repository</a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/Barata-Ribeiro/GitPop"
+          >
+            Repository
+          </a>
         </div>
       </div>
       {modal && <Terms closeModal={handleModal} />}
