@@ -9,7 +9,7 @@ const InputBar = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-full sm:mt-14 mt-9 px-4 sm:px-6 lg:px-8">
+    <div className="w-full">
       <form
         onSubmit={handleSubmit}
         className="flex flex-row justify-center items-center max-sm:flex-col"

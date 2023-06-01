@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <>
       <BrandLogo />
-      <div className="flex justify-center items-center w-full my-6">
+      <div className="flex justify-center items-center w-full">
         <p className="text-center text-2xl text-shark-950 max-w-2xl">
           Welcome to <span className="font-rubik text-shark-950">GitPop</span>,
           where popularity meets code! Discover the hottest repositories for any{" "}

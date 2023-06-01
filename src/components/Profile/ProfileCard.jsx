@@ -27,7 +27,7 @@ const ProfileCard = ({
   const formattedDateString = `${formattedDate}`;
 
   return (
-    <div className="w-full sm:mt-14 mt-9 px-4 sm:px-6 lg:px-8 border-t border-shark-900/5 pt-10">
+    <div className="w-full sm:mt-14 mt-9 sm:px-6 lg:px-8 border-t border-shark-900/5 pt-10">
       <div className="flex flex-col gap-2 items-center">
         <div className="relative">
           <img

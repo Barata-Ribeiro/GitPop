@@ -103,10 +103,11 @@ const App = () => {
 
   return (
     <>
-      <Header />
-      <main className="h-full flex flex-col justify-center items-center">
+      <div className="w-full flex flex-col justify-center items-center gap-9 px-4 sm:px-6 lg:px-8">
+        <Header />
         <InputBar onSubmit={handleInputSubmit} />
-
+      </div>
+      <main className="h-full flex flex-col justify-center items-center my-9 px-4">
         {/* PROFILE */}
         {loading ? (
           <LoadingAnim />

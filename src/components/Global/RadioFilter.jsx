@@ -3,7 +3,7 @@ import React from "react";
 const RadioFilter = ({ options, value, setValue, ...props }) => {
   return (
     <>
-      <ul className="flex flex-wrap gap-3 my-14">
+      <ul className="flex flex-wrap gap-3 my-10 justify-center">
         {options.map((option) => (
           <li key={option}>
             <input
