@@ -1,5 +1,20 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { GoStar } from "react-icons/go";
+
+// Sub-component for each repository title and information
+const RepoInfo = ({ title, info }) => (
+  <div className="flex flex-col-reverse">
+    <dt className="text-sm font-medium text-shark-600">{title}</dt>
+    <dd className="text-xs text-shark-500">{info}</dd>
+  </div>
+);
+
+// Sets the types of each repo card, for title and info
+RepoInfo.propTypes = {
+  title: PropTypes.string.isRequired,
+  info: PropTypes.string.isRequired,
+};
 
 const RepoCard = ({
   gitRepoLink,
@@ -12,7 +27,7 @@ const RepoCard = ({
   gitRepoLicense,
 }) => {
   return (
-    <div>
+    <>
       <a
         href={gitRepoLink}
         target="_blank"
@@ -27,10 +42,9 @@ const RepoCard = ({
             <h3 className="text-lg font-bold text-shark-900 sm:text-xl">
               {gitRepoTitle}
             </h3>
-
-            <p className="mt-1 text-xs font-medium text-shark-600">
+            <cite className="mt-1 text-xs font-medium text-shark-600">
               By {gitRepoAuthor}
-            </p>
+            </cite>
           </div>
 
           <div className="flex items-center gap-2">
@@ -44,24 +58,24 @@ const RepoCard = ({
         </div>
 
         <dl className="mt-6 flex gap-4 sm:gap-6">
-          <div className="flex flex-col-reverse">
-            <dt className="text-sm font-medium text-shark-600">Published</dt>
-            <dd className="text-xs text-shark-500">{gitRepoDate}</dd>
-          </div>
-
-          <div className="flex flex-col-reverse">
-            <dt className="text-sm font-medium text-shark-600">Last Update</dt>
-            <dd className="text-xs text-shark-500">{gitRepoUpdate}</dd>
-          </div>
-
-          <div className="flex flex-col-reverse">
-            <dt className="text-sm font-medium text-shark-600">License</dt>
-            <dd className="text-xs text-shark-500">{gitRepoLicense}</dd>
-          </div>
+          <RepoInfo title="Published" info={gitRepoDate} />
+          <RepoInfo title="Last Update" info={gitRepoUpdate} />
+          <RepoInfo title="License" info={gitRepoLicense} />
         </dl>
       </a>
-    </div>
+    </>
   );
+};
+
+RepoCard.propTypes = {
+  gitRepoLink: PropTypes.string.isRequired,
+  gitRepoTitle: PropTypes.string.isRequired,
+  gitRepoAuthor: PropTypes.string.isRequired,
+  gitRepoStars: PropTypes.number.isRequired,
+  gitRepoDesc: PropTypes.string.isRequired,
+  gitRepoDate: PropTypes.string.isRequired,
+  gitRepoUpdate: PropTypes.string.isRequired,
+  gitRepoLicense: PropTypes.string.isRequired,
 };
 
 export default RepoCard;
