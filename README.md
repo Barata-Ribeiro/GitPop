@@ -8,7 +8,7 @@ GitPop is a web application designed for those who want to explore GitHub user's
 
 [Click here](https://Barata-Ribeiro.github.io/GitPop) to see a live demo of the website.
 
-_screenshot soon_
+![GitPop](./public/screenshot.gif)
 
 ## 🚀 Built With
 
@@ -49,10 +49,6 @@ npm run dev
 ## 🤝 Contributing
 
 If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request.
-
-## 🔮 Future Goals
-
-The plan is to continuously improve GitPop, expand its functionality, and provide users with an even more comprehensive overview of GitHub user profiles.
 
 ## 📜 License
 
